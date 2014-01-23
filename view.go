@@ -52,12 +52,3 @@ func (view *HtmlView) Render(c *z.Context, data interface{}) error {
 	w.Header()["Content-Type"] = []string{"text/html"}
 	return view.template.Execute(w, data)
 }
-
-// Same as calling HtmlView.Render(*Context, interface{}) but will panic if there is an
-// error.
-func (view *HtmlView) MustRender(c *z.Context, data interface{}) {
-	e := view.Render(c, data)
-	if e != nil {
-		panic(e)
-	}
-}

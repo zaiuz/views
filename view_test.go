@@ -85,9 +85,6 @@ func renderEqual(t *testing.T, view *HtmlView, expected []byte) {
 	result, e := renderToString(view, nil)
 	a.NoError(t, e)
 	a.Equal(t, string(result), string(expected), "render result mismatch.")
-
-	result = mustRenderToString(view, nil)
-	a.Equal(t, string(result), string(expected), "render result mismatch.")
 }
 
 func renderMatch(t *testing.T, view *HtmlView, data interface{}, pattern string) {
@@ -96,31 +93,15 @@ func renderMatch(t *testing.T, view *HtmlView, data interface{}, pattern string)
 	result, e := renderToString(view, data)
 	a.NoError(t, e)
 	a.NotNil(t, re.FindString(result), "render output does not match pattern.")
-
-	result = mustRenderToString(view, data)
-	a.NotNil(t, re.FindString(result), "render output does not match pattern.")
 }
 
 func renderFail(t *testing.T, view *HtmlView) {
 	_, e := renderToString(view, nil)
-	a.Error(t, e, "expected rendering to fail.")
-
-	test := func() { mustRenderToString(view, nil) }
-	a.Panics(t, test, "expected rendering to panic.")
+	a.Error(t, e, "fail rendering should return an error.")
 }
 
 func renderToString(view *HtmlView, data interface{}) (string, error) {
 	return renderToStringCore(view.Render, data)
-}
-
-func mustRenderToString(view *HtmlView, data interface{}) string {
-	renderer := renderFunc(func(context *z.Context, data_ interface{}) error {
-		view.MustRender(context, data_)
-		return nil
-	})
-
-	result, _ := renderToStringCore(renderer, data)
-	return result
 }
 
 type renderFunc func(*z.Context, interface{}) error
