@@ -4,25 +4,10 @@ import "io/ioutil"
 import "net/http/httptest"
 import "testing"
 import "github.com/zaiuz/testutil"
-import "regexp"
-import "code.google.com/p/go-uuid/uuid"
 import . "github.com/zaiuz/views"
-import z "github.com/zaiuz/zaiuz"
 import a "github.com/stretchr/testify/assert"
 
-const (
-	singleFile         = "./testviews/single.html"
-	singleFileOutput   = "./testviews/single.output.html"
-	parentFile         = "./testviews/parent.html"
-	childFile          = "./testviews/child.html"
-	combinedFileOutput = "./testviews/combined.output.html"
-)
-
-type TestData string
-
-func NewTestData() TestData {
-	return TestData(uuid.New())
-}
+var _ View = &HtmlView{}
 
 func TestNewHtmlView(t *testing.T) {
 	test := func() { NewHtmlView() }
@@ -79,41 +64,4 @@ func TestRenderCombined(t *testing.T) {
 	result, e := renderToString(child, nil)
 	a.NoError(t, e)
 	a.Equal(t, string(result), string(output), "combined result wrong.")
-}
-
-func renderEqual(t *testing.T, view *HtmlView, expected []byte) {
-	result, e := renderToString(view, nil)
-	a.NoError(t, e)
-	a.Equal(t, string(result), string(expected), "render result mismatch.")
-}
-
-func renderMatch(t *testing.T, view *HtmlView, data interface{}, pattern string) {
-	re := regexp.MustCompile(pattern)
-
-	result, e := renderToString(view, data)
-	a.NoError(t, e)
-	a.NotNil(t, re.FindString(result), "render output does not match pattern.")
-}
-
-func renderFail(t *testing.T, view *HtmlView) {
-	_, e := renderToString(view, nil)
-	a.Error(t, e, "fail rendering should return an error.")
-}
-
-func renderToString(view *HtmlView, data interface{}) (string, error) {
-	return renderToStringCore(view.Render, data)
-}
-
-type renderFunc func(*z.Context, interface{}) error
-
-func renderToStringCore(renderer renderFunc, data interface{}) (string, error) {
-	context := testutil.NewTestContext()
-
-	e := renderer(context, data)
-	if e != nil {
-		return "", e
-	}
-
-	resp := context.ResponseWriter.(*httptest.ResponseRecorder)
-	return string(resp.Body.Bytes()), nil
 }

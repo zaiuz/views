@@ -20,7 +20,7 @@ type HtmlView struct {
 
 // Creates a new html view from the specified template name which should be a
 // html/template-compatible html template file.
-func NewHtmlView(filenames ...string) *HtmlView {
+func NewHtmlView(filenames ...string) View {
 	if len(filenames) < 1 {
 		panic("needs at least 1 filename.")
 	}
@@ -36,7 +36,7 @@ func NewHtmlView(filenames ...string) *HtmlView {
 
 // Creates a subview from the receiving view. Subview templates contains all templates
 // defined in the parent view.
-func (view *HtmlView) Subview(filenames ...string) *HtmlView {
+func (view *HtmlView) Subview(filenames ...string) View {
 	if len(filenames) < 1 {
 		panic("need at least 1 filename.")
 	}
