@@ -1,4 +1,4 @@
-package zaiuz_test
+package views_test
 
 import "io/ioutil"
 import "net/http/httptest"
@@ -6,7 +6,8 @@ import "testing"
 import "github.com/zaiuz/testutil"
 import "regexp"
 import "code.google.com/p/go-uuid/uuid"
-import . "github.com/zaiuz/zaiuz"
+import . "github.com/zaiuz/views"
+import z "github.com/zaiuz/zaiuz"
 import a "github.com/stretchr/testify/assert"
 
 const (
@@ -113,7 +114,7 @@ func renderToString(view *HtmlView, data interface{}) (string, error) {
 }
 
 func mustRenderToString(view *HtmlView, data interface{}) string {
-	renderer := renderFunc(func(context *Context, data_ interface{}) error {
+	renderer := renderFunc(func(context *z.Context, data_ interface{}) error {
 		view.MustRender(context, data_)
 		return nil
 	})
@@ -122,7 +123,7 @@ func mustRenderToString(view *HtmlView, data interface{}) string {
 	return result
 }
 
-type renderFunc func(*Context, interface{}) error
+type renderFunc func(*z.Context, interface{}) error
 
 func renderToStringCore(renderer renderFunc, data interface{}) (string, error) {
 	context := testutil.NewTestContext()

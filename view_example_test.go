@@ -1,9 +1,9 @@
-package zaiuz_test
+package views_test
 
 import "io"
 import "os"
 import "net/http/httptest"
-import . "github.com/zaiuz/zaiuz"
+import . "github.com/zaiuz/views"
 import "github.com/zaiuz/testutil"
 
 var ParentView = NewHtmlView("./testviews/example-parent.html")

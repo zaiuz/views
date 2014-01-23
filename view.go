@@ -1,7 +1,8 @@
-package zaiuz
+package views
 
 // TODO: Support for text/template for some kind of views (i.e. json/xml)
 import tmpl "html/template"
+import z "github.com/zaiuz/zaiuz"
 
 // TODO: interface View {}, then type JsonView and type XmlView : )
 // type View interface{ Render(c *Context) error }
@@ -45,7 +46,7 @@ func (view *HtmlView) Subview(filenames ...string) *HtmlView {
 
 // Renders the view to the response in the supplied Context with the given view data
 // context.
-func (view *HtmlView) Render(c *Context, data interface{}) error {
+func (view *HtmlView) Render(c *z.Context, data interface{}) error {
 	// TODO: Configurable/overridable content type support
 	w := c.ResponseWriter
 	w.Header()["Content-Type"] = []string{"text/html"}
@@ -54,7 +55,7 @@ func (view *HtmlView) Render(c *Context, data interface{}) error {
 
 // Same as calling HtmlView.Render(*Context, interface{}) but will panic if there is an
 // error.
-func (view *HtmlView) MustRender(c *Context, data interface{}) {
+func (view *HtmlView) MustRender(c *z.Context, data interface{}) {
 	e := view.Render(c, data)
 	if e != nil {
 		panic(e)
