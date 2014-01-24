@@ -1,3 +1,10 @@
-{{define "body"}}
+
+# This is a title.
+
+
 Doming id quod mazim placerat facer possim assum. Typi non habent
-{{end}}
+
+
+# This is footer
+
+Footer text.
