@@ -1,0 +1,9 @@
+{{define "root"}}
+# This is a title.
+
+{{template "body"}}
+
+# This is footer
+
+Footer text.
+{{end}}
