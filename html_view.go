@@ -3,13 +3,6 @@ package views
 import tmpl "html/template"
 import z "github.com/zaiuz/zaiuz"
 
-// TODO: interface View {}, then type JsonView and type XmlView : )
-// type View interface{ Render(c *Context) error }
-
-// The html/template template name to starts rendering from. Usually this is the topmost
-// {{define "root"}} block in your template.
-const RootTemplateName = "root"
-
 // Represents a single html/template template. Encapsulate the template pathname from
 // controller action code and allows further subviews based on this view.
 type HtmlView struct {
@@ -24,8 +17,7 @@ func NewHtmlView(filenames ...string) View {
 		panic("needs at least 1 filename.")
 	}
 
-	t := tmpl.New(RootTemplateName)
-	t, e := t.ParseFiles(filenames...)
+	t, e := tmpl.ParseFiles(filenames...)
 	if e != nil {
 		panic(e) // better to failfast here since views are pre-loaded at startup.
 	}
@@ -45,5 +37,5 @@ func (view *HtmlView) Render(c *z.Context, data interface{}) error {
 	// TODO: Configurable/overridable content type support
 	w := c.ResponseWriter
 	w.Header()["Content-Type"] = []string{"text/html"}
-	return view.template.Execute(w, data)
+	return view.template.ExecuteTemplate(w, RootTemplateName, data)
 }
