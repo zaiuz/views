@@ -4,7 +4,7 @@
 <title>HtmlView test container layout</title>
 </head>
 <body>
-Hello, SingleTemplate
+Hello, {{if .Data}}{{.Data}}{{else}}SingleTemplate{{end}}
 </body>
 </html>
 {{end}}

@@ -1,6 +1,5 @@
 package views
 
-// TODO: Support for text/template for some kind of views (i.e. json/xml)
 import tmpl "html/template"
 import z "github.com/zaiuz/zaiuz"
 
@@ -37,10 +36,6 @@ func NewHtmlView(filenames ...string) View {
 // Creates a subview from the receiving view. Subview templates contains all templates
 // defined in the parent view.
 func (view *HtmlView) Subview(filenames ...string) View {
-	if len(filenames) < 1 {
-		panic("need at least 1 filename.")
-	}
-
 	return NewHtmlView(append(view.filenames, filenames...)...)
 }
 
