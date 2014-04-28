@@ -17,12 +17,21 @@ func NewHtmlView(filenames ...string) View {
 		panic("needs at least 1 filename.")
 	}
 
-	t, e := tmpl.ParseFiles(filenames...)
-	if e != nil {
-		panic(e) // better to failfast here since views are pre-loaded at startup.
-	}
+	view := &HtmlView{nil, filenames}
+	registerAutoReparseView(view)
+	return view.ReparseTemplate()
+}
 
-	return &HtmlView{t, filenames}
+func (view *HtmlView) Filenames() []string {
+	return view.filenames
+}
+
+func (view *HtmlView) ReparseTemplate() View {
+	t, e := tmpl.ParseFiles(view.filenames...)
+	noError(e) // better to failfast here since views are pre-loaded at startup.
+
+	view.template = t
+	return view
 }
 
 // Creates a subview from the receiving view. Subview templates contains all templates

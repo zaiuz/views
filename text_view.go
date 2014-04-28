@@ -13,12 +13,16 @@ func NewTextView(filenames ...string) View {
 		panic("needs at least 1 filename.")
 	}
 
-	t, e := tmpl.ParseFiles(filenames...)
-	if e != nil {
-		panic(e) // better to failfast here
-	}
+	view := &TextView{nil, filenames}
+	return view.parseTemplate()
+}
 
-	return &TextView{t, filenames}
+func (view *TextView) parseTemplate() View {
+	t, e := tmpl.ParseFiles(view.filenames...)
+	noError(e) // better to failfast here
+
+	view.template = t
+	return view
 }
 
 func (view *TextView) Subview(filenames ...string) View {
