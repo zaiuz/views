@@ -1,6 +1,5 @@
 package views
 
-import "fmt"
 import "path/filepath"
 import "github.com/howeyc/fsnotify"
 
@@ -33,7 +32,6 @@ func newReparser() *reparser {
 func (r *reparser) addReparsable(view reparsable) {
 	for _, name := range view.Filenames() {
 		name = normalizeFilename(name)
-		fmt.Println("add: ", name)
 		r.reparsables[name] = view
 		e := r.watcher.Watch(name)
 		noError(e)
@@ -41,13 +39,9 @@ func (r *reparser) addReparsable(view reparsable) {
 }
 
 func (r *reparser) start() {
-	fmt.Println("reparser: start")
-
 	done := false
 	go func() {
-		fmt.Println("entering loop")
 		for !done {
-			fmt.Println("iteration")
 			select {
 			case ev := <-r.watcher.Event:
 				filename := normalizeFilename(ev.Name)
@@ -63,14 +57,11 @@ func (r *reparser) start() {
 				}
 
 			case err := <-r.watcher.Error:
-				fmt.Println("error")
 				panic(err)
 			case <-r.done:
-				fmt.Println("done")
 				done = true
 			}
 		}
-		fmt.Println("stopped.")
 	}()
 }
 
